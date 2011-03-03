@@ -13,7 +13,7 @@
 
 
 
-# To execute this script, the user will have to be related to 
+# To execute this script, the user will have to be related to any of the subversion groups 
 # Para ejecutar este Script, deberá pertenecer a un grupo relacionado con subversion, y 
 # dependiendo de a que grupo pertenezca, se le asignarán unos poderes u otros.
 # Por tanto, lo primero será saber quien nos está ejecutando
