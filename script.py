@@ -4,7 +4,7 @@ from grp import getgrall
 
 def parse_grupos():
     a=getgrall()
-    lista=()
+    lista=[]
     # @type a tuple
     a.sort()
     for item in a:
