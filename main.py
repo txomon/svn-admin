@@ -8,4 +8,5 @@ __date__ ="$09-mar-2011 15:17:25$"
 
 from script import *
 
-parse_config()
+listaporgrupo=parse_grupos()
+listapordirectorio=parse_dirs('/etc')
