@@ -41,8 +41,11 @@ def grouptodir(groups, dirs):
 
 def dirtogroup(groups, dirs):
     for dir in dirs:
+        # @type a str
         a=dir
         a.replace('-', '/')
+        a[0]=' '
+        a=a.rstrip()
         if not dir in groups:
            i=i+1
 	   print("Se crea el grupo "+dir)
