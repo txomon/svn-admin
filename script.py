@@ -9,21 +9,19 @@ def parse_grupos():
     a.sort()
     for item in a:
         # @type item grp
-        if 'svn' in item.gr_name:
-            print("Found",item.gr_name)
+        if 'svn' in item.gr_name and item.gr_gid > 9999:
+            print("Found "+item.gr_name)
             lista.append(item)
     if len(lista) == 0:
         print("No svn structure in groups file")
         return(0)
-    else:
-        print (lista)
     return lista
 
 def parse_dirs(lista,basedir):
     a=os.walk(basedir)
     # @type list list
     for (path, dirs, files) in a:
-        if files.find()
+        if (not 'README.txt' in files):
             for dir in dirs:
                 b=basedir+'/'+dir
                 lista.append(b);
@@ -35,12 +33,18 @@ def grouptodir(groups, dirs):
     for group in groups:
         a=group.gr_name
         a.replace('-', '/')
-        if dirs == false :
-            os.makedirs(a, 4777)
-    return
+        if not group in dirs:
+            i=i+1
+            print ("se crea la carpeta "+a)
+          #  os.makedirs(a, 4777)
+    return i
 
 def dirtogroup(groups, dirs):
     for dir in dirs:
         a=dir
         a.replace('-', '/')
-        if
+        if not dir in groups:
+           i=i+1
+	   print("Se crea el grupo "+dir)
+	   # creargrupo()
+    return i
