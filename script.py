@@ -19,13 +19,28 @@ def parse_grupos():
         print (lista)
     return lista
 
-def parse_dirs(basedir):
+def parse_dirs(lista,basedir):
     a=os.walk(basedir)
     # @type list list
-    lista=[]
     for (path, dirs, files) in a:
-        for dir in dirs:
-            b=basedir+'/'+dir
-            lista.append(b);
-            parse_dirs(b)
-        break
+        if files.find()
+            for dir in dirs:
+                b=basedir+'/'+dir
+                lista.append(b);
+                lista=parse_dirs(lista,b)
+            break
+    return lista
+
+def grouptodir(groups, dirs):
+    for group in groups:
+        a=group.gr_name
+        a.replace('-', '/')
+        if dirs == false :
+            os.makedirs(a, 4777)
+    return
+
+def dirtogroup(groups, dirs):
+    for dir in dirs:
+        a=dir
+        a.replace('-', '/')
+        if

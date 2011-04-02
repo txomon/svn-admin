@@ -9,4 +9,7 @@ __date__ ="$09-mar-2011 15:17:25$"
 from script import *
 
 listaporgrupo=parse_grupos()
-listapordirectorio=parse_dirs('/etc')
+listapordirectorio=parse_dirs([],'/etc')
+# @type listapordirectorio list
+listaporgrupo.sort()
+listapordirectorio.sort()
