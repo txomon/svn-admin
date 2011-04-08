@@ -9,10 +9,12 @@ __date__ ="$09-mar-2011 15:17:25$"
 from script import *
 
 listaporgrupo=parse_grupos()
-listapordirectorio=parse_dirs([],'/svn')
+listapordirectorio=parse_dirs(['/svn'],'/svn')
 # @type listapordirectorio list
 listaporgrupo.sort()
 listapordirectorio.sort()
+grouptodir(listaporgrupo,listapordirectorio)
+dirtogroup(listaporgrupo,listapordirectorio)
 for a in listaporgrupo:
 	print(a.gr_name)
 for a in listapordirectorio:
