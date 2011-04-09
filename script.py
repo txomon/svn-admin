@@ -62,6 +62,6 @@ def creategroup(group,groups):
     for a in groups:
         lista.append(a.gr_gid)
     lista.sort()
-    a=lista.pop()+1
-    print("addgroup --gid "+gid+" "+group)
+    gid=lista.pop()+1
+    print("addgroup --gid "+gid.__str__()+" "+group)
     #os.system("addgroup --gid "+gid+" "+group)
