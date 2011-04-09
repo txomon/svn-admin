@@ -38,8 +38,7 @@ def grouptodir(groups, dirs):
             dirs.index(a)
 	except ValueError:
             i=i+1
-            print ("se crea la carpeta "+a)
-            #  os.makedirs(a, 4777)
+            print ("WARNING!: Extra group ("+i+") in your /etc/group file! => "+a)
     return i
 
 def dirtogroup(groups, dirs):
@@ -55,5 +54,14 @@ def dirtogroup(groups, dirs):
         if not (a in lista):
             i=i+1
             print("se crea el grupo "+a)
-            # creargrupo()
+            creategroup(a,groups)
     return i
+
+def creategroup(group,groups):
+    lista=[]
+    for a in groups:
+        lista.append(a.gr_gid)
+    lista.sort()
+    a=lista.pop()+1
+    print("addgroup --gid "+gid+" "+group)
+    #os.system("addgroup --gid "+gid+" "+group)
