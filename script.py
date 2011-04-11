@@ -38,7 +38,11 @@ def grouptodir(groups, dirs):
             dirs.index(a)
 	except ValueError:
             i=i+1
-            print ("WARNING!: Extra group ("+i+") in your /etc/group file! => "+a)
+            print ("WARNING!: Extra group ("+i.__str__()+") in your /etc/group file! => "+a)
+            opcion=raw_input("Do you want to delete the group? [S/n]")
+            if opcion != 'n' and opcion != 'N':
+                delgroup(group.gr_name)
+                
     return i
 
 def dirtogroup(groups, dirs):
@@ -65,3 +69,6 @@ def creategroup(group,groups):
     gid=lista.pop()+1
     print("addgroup --gid "+gid.__str__()+" "+group)
     #os.system("addgroup --gid "+gid+" "+group)
+
+def delgroup(group):
+    os.system("delgroup "+group)
