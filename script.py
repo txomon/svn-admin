@@ -47,11 +47,11 @@ def grouptodir(groups, dirs):
 
 def dirtogroup(groups, dirs):
     i=0
-    lista=[]
-    for a in groups:
-	lista.append(a.gr_name) 
     for dir in dirs:
         # @type a str
+        lista=[]
+        for a in groups:
+            lista.append(a.gr_name) 
         a=dir
         a=a.replace('/', '', 1)
         a=a.replace('/', '-')
@@ -67,7 +67,7 @@ def creategroup(group,groups):
         lista.append(a.gr_gid)
     lista.sort()
     gid=lista.pop()+1
-    print("addgroup --gid "+gid.__str__()+" "+group)
+    os.system("addgroup --gid "+gid.__str__()+" "+group)
     #os.system("addgroup --gid "+gid+" "+group)
 
 def delgroup(group):

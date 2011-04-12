@@ -12,7 +12,6 @@ import os
 listaporgrupo=parse_grupos()
 listapordirectorio=parse_dirs(['/svn'],'/svn')
 # @type listapordirectorio list
-print("el usuario actual es "+os.geteuid().__str__())
 listaporgrupo.sort()
 listapordirectorio.sort()
 grouptodir(listaporgrupo,listapordirectorio)
