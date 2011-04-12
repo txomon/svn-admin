@@ -13,7 +13,7 @@ def parse_grupos():
             lista.append(item)
     if len(lista) == 0:
         print("No svn structure in groups file")
-        return(0)
+        return(-1)
     return lista
 
 def parse_dirs(lista,basedir):
@@ -36,7 +36,7 @@ def grouptodir(groups, dirs):
         a='/'+a
         try:
             dirs.index(a)
-	except ValueError:
+        except ValueError:
             i=i+1
             print ("WARNING!: Extra group ("+i.__str__()+") in your /etc/group file! => "+a)
             opcion=raw_input("Do you want to delete the group? [S/n]")
@@ -45,13 +45,17 @@ def grouptodir(groups, dirs):
                 
     return i
 
-def dirtogroup(groups, dirs):
+def dirtogroup(dirs):
     i=0
+    x=-1
     for dir in dirs:
         # @type a str
-        lista=[]
-        for a in groups:
-            lista.append(a.gr_name) 
+        if i!=x:
+            x=i;
+            lista=[]
+            listaxgrupos=parse_grupos()
+            for a in listaxgrupos:
+                lista.append(a.gr_name)
         a=dir
         a=a.replace('/', '', 1)
         a=a.replace('/', '-')
@@ -59,7 +63,7 @@ def dirtogroup(groups, dirs):
             i=i+1
             print("se crea el grupo "+a)
             creategroup(a,groups)
-    return i
+    return listaxgrupos
 
 def creategroup(group,groups):
     lista=[]
