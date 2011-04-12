@@ -42,8 +42,9 @@ def grouptodir(groups, dirs):
             opcion=raw_input("Do you want to delete the group? [S/n]")
             if opcion != 'n' and opcion != 'N':
                 delgroup(group.gr_name)
+                groups=parse_grupos()
                 
-    return i
+    return groups 
 
 def dirtogroup(dirs):
     i=0
@@ -62,7 +63,7 @@ def dirtogroup(dirs):
         if not (a in lista):
             i=i+1
             print("se crea el grupo "+a)
-            creategroup(a,groups)
+            creategroup(a,listaxgrupos)
     return listaxgrupos
 
 def creategroup(group,groups):
