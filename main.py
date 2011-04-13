@@ -31,7 +31,7 @@ try:
         c=stdscr.getch()
         if c == curses.KEY_RESIZE:
             stdscr.refresh()
-        if c == ord('q') | c== ord('Q') | c == curses.KEY_EXIT:
+        if c == ord('q') | c== ord('Q') | c == curses.KEY_EXIT | c=='q' | c=='Q':
             fuera=1
 except :
     finaliza_curses(stdscr)
