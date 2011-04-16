@@ -26,6 +26,7 @@ def cursa(stdscr):
     umenu=("User","user_menu()")
     gmenu=("Group","group_menu()")
     rmenu=("Repository","repo_menu()")
+    menus=(umenu,gmenu,rmenu)
     global screen
     while 1:
         # @type stdscr window
@@ -37,8 +38,9 @@ def cursa(stdscr):
         screen = stdscr.subwin(dim[0], dim[1], 0, 0)
         iniciacolores()
         screen.refresh()
+        index=-1
         while 1:
-            opciones=bartool((umenu,gmenu,rmenu),screen)
+            opciones=bartool(menus,screen,index)
             #main(arbol,index,up)
             #info(index)
             temp=0
@@ -47,11 +49,19 @@ def cursa(stdscr):
             if chr(c) in opciones:
                 while c!=temp:
                     if temp!=0:
-                        if c in (curses.KEY_LEFT, curses.KEY_RIGHT):
-                            
+                        if c == curses.KEY_LEFT:
+                            if index==0:
+                                index=len(menus)
+                            index=index-1
+                        if c == curses.KEY_RIGHT:
+                            if index== len(menus):
+                                index=-1
+                            index=index+1
+                        c=ord(opciones.get(menus[index][0][0]))
                     temp=c
                     debug("Ha entrado con la tecla "+chr(temp)+"a la función "+opciones[chr(temp)])
-                    eval(opciones[chr(temp)])
+                    opciones[chr(temp)]()
+
             if c==ord('q') or c==curses.KEY_RESIZE:
                 break
             else:
@@ -62,13 +72,18 @@ def cursa(stdscr):
             return 0
 
 
-def bartool(menus,screen):
+def bartool(menus,screen,index):
     left = 0
+    x=0
     dict={}
     for menu in menus:
         menu_name = menu[0]
         menu_hotkey = menu_name[0]
         menu_no_hot = menu_name[1:]
+        if x==index:
+            screen.addstr(0, left, menu_hotkey,menu_color|curses.A_BOLD|curses.A_REVERSE)
+            screen.addstr(0, left+1, menu_no_hot,menu_color|curses.A_REVERSE)
+
         screen.addstr(0, left, menu_hotkey,menu_color|curses.A_BOLD)
         screen.addstr(0, left+1, menu_no_hot,menu_color)
         left = left + len(menu_name)
@@ -136,11 +151,11 @@ def user_menu():
                 index=len(usermenu)
             index=index-1
         elif c == curses.KEY_ENTER:
-            eval(dict[index])
+            usermenu[index]()
         elif c in (curses.KEY_RESIZE, curses.KEY_LEFT, curses.KEY_RIGHT):
             return c
         elif c in dict:
-            eval(dict.getkey(c))
+            dict[chr(c)]()
         else:
             info("Has pulsado "+chr(c)+" con codigo "+c.__str__())
         
