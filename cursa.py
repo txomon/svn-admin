@@ -13,7 +13,6 @@ import curses.wrapper
 #menu_attr = curses.A_NORMAL
 
 
-
 grupos=['svn','svn-actividades','svn-actividades-sensor','svn-actividades-sensor-ksensor','svn-prueba','svn-prueba-ejemplo1']
 dirs=['/svn','/svn/actividades','/svn/actividades/sensor','/svn/actividades/sensor/ksensor','/svn/prueba','/svn/prueba/ejemplo1']
 
@@ -33,6 +32,7 @@ def cursa(stdscr):
         # @type screen window
         # @type grupos list
         global dim
+        global c
         dim=stdscr.getmaxyx()
         screen = stdscr.subwin(dim[0], dim[1], 0, 0)
         iniciacolores()
@@ -41,16 +41,21 @@ def cursa(stdscr):
             opciones=bartool((umenu,gmenu,rmenu),screen)
             #main(arbol,index,up)
             #info(index)
+            temp=0
             c=screen.getch()
+            # @type opciones dict
+            if chr(c) in opciones:
+                while c!=temp:
+                    if temp!=0:
+                        if c in (curses.KEY_LEFT, curses.KEY_RIGHT):
+                            
+                    temp=c
+                    debug("Ha entrado con la tecla "+chr(temp)+"a la función "+opciones[chr(temp)])
+                    eval(opciones[chr(temp)])
             if c==ord('q') or c==curses.KEY_RESIZE:
                 break
-            # @type opciones dict
-            elif chr(c) in opciones:
-                debug("Ha entrado con la tecla "+chr(c)+
-                    " a la función "+opciones[chr(c)])
-                eval(opciones[chr(c)])
             else:
-                info("La opción para "+chr(c)+" no está implementada")
+                info("La opción para "+chr(c).__str__()+" no está implementada")
                 debug(opciones.items().__str__())
         stdscr.erase()
         if c==ord('q'):
@@ -113,24 +118,33 @@ def user_menu():
         if len(a[0])>x:
             x=len(a[0])
     umenu=curses.newwin(len(usermenu)+2, x+2, 1, 0)
-    box(umenu,menu_color)
-    umenu.refresh()
+    umenu.keypad(1)
     index=0
     while 1:
+        box(umenu,menu_color)
         dict=menutool(usermenu,umenu,1,1,index)
         c=umenu.getch()
         if c==ord('q') or c==curses.KEY_RESIZE:
             break
-        elif c==curses.KEY_DOWN:
+        elif c == curses.KEY_DOWN:
             # @type dict dict
             index=index+1
-            if x==index:
+            if len(usermenu)==index:
                 index=0
-        elif c==curses.KEY_UP:
+        elif c == curses.KEY_UP:
+            if index==0:
+                index=len(usermenu)
             index=index-1
+        elif c == curses.KEY_ENTER:
+            eval(dict[index])
+        elif c in (curses.KEY_RESIZE, curses.KEY_LEFT, curses.KEY_RIGHT):
+            return c
         elif c in dict:
             eval(dict.getkey(c))
-        curses.noraw()
+        else:
+            info("Has pulsado "+chr(c)+" con codigo "+c.__str__())
+        
+
 
 def iniciacolores():
 
@@ -205,9 +219,11 @@ def box(window,attr):
 def debug(str):
     screen.addnstr(dim[0]-1,0,' '*dim[1],dim[1]-1,debug_color)
     screen.addnstr(dim[0]-1,0,str,dim[1]-1,debug_color)
+    screen.refresh()
 
 def info(str):
     screen.addnstr(dim[0]-2,0,' '*dim[1],dim[1]-1,info_color)
     screen.addnstr(dim[0]-2,0,str,dim[1]-1,info_color)
+    screen.refresh()
 
 curses.wrapper(cursa)
