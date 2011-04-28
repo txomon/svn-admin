@@ -23,17 +23,15 @@ dirs=['/svn','/svn/actividades','/svn/actividades/sensor','/svn/actividades/sens
         # @type infobar window
 
 def cursa(stdscr):
-    umenu=("User","user_menu()")
-    gmenu=("Group","group_menu()")
-    rmenu=("Repository","repo_menu()")
+    umenu=("User",user_menu)
+    gmenu=("Group","group_menu")
+    rmenu=("Repository","repo_menu")
     menus=(umenu,gmenu,rmenu)
     global screen
     while 1:
         # @type stdscr window
         # @type screen window
         # @type grupos list
-        global dim
-        global c
         dim=stdscr.getmaxyx()
         screen = stdscr.subwin(dim[0], dim[1], 0, 0)
         iniciacolores()
@@ -48,7 +46,7 @@ def cursa(stdscr):
             # @type opciones dict
             if chr(c) in opciones:
                 while c!=temp:
-                    if temp!=0:
+                    if temp!=0:# We want to know if we have been called by another menu, or by the main window
                         if c == curses.KEY_LEFT:
                             if index==0:
                                 index=len(menus)
@@ -57,10 +55,11 @@ def cursa(stdscr):
                             if index== len(menus):
                                 index=-1
                             index=index+1
-                        c=ord(opciones.get(menus[index][0][0]))
+                        c=ord(menus[index][0][0])
                     temp=c
-                    debug("Ha entrado con la tecla "+chr(temp)+"a la función "+opciones[chr(temp)])
-                    opciones[chr(temp)]()
+                    debug("Ha entrado con la tecla "+chr(temp)+"a la función "+opciones[chr(temp)].__str__()+" index="+str(index))
+                    sleep(3)
+                    c=opciones[chr(temp)]()
 
             if c==ord('q') or c==curses.KEY_RESIZE:
                 break
@@ -95,7 +94,7 @@ def bartool(menus,screen,index):
         dict[menu_hotkey.lower()]= menu[1]
     # Little aesthetic thing to display application title
     # screen.addstr(1, left-1,">"*(52-left)+ " Txt2Html Curses Interface",curses.A_STANDOUT)
-    screen.addstr(0,left,' '*(dim[1]-left),menu_color)
+    screen.addstr(0,left,' '*(screen.getmaxyx()[1]-left),menu_color)
     screen.refresh()
     return dict
 
@@ -139,8 +138,8 @@ def user_menu():
         box(umenu,menu_color)
         dict=menutool(usermenu,umenu,1,1,index)
         c=umenu.getch()
-        if c==ord('q') or c==curses.KEY_RESIZE:
-            break
+        if c in (ord('q'),curses.KEY_RESIZE, curses.KEY_LEFT, curses.KEY_RIGHT):
+            return c
         elif c == curses.KEY_DOWN:
             # @type dict dict
             index=index+1
@@ -152,8 +151,6 @@ def user_menu():
             index=index-1
         elif c == curses.KEY_ENTER:
             usermenu[index]()
-        elif c in (curses.KEY_RESIZE, curses.KEY_LEFT, curses.KEY_RIGHT):
-            return c
         elif c in dict:
             dict[chr(c)]()
         else:
@@ -200,9 +197,9 @@ def box(window,attr):
     v='│'
     # @type window window
     b=0
-    windowdim=window.getmaxyx()
-    y=windowdim[0]-1
-    x=windowdim[1]-1
+    dim=window.getmaxyx()
+    y=dim[0]-1
+    x=dim[1]-1
     while b<=y: #| b==y:
         a=0
         while a<=x:# | a==x:
@@ -232,11 +229,13 @@ def box(window,attr):
     return
 
 def debug(str):
+    dim=screen.getmaxyx()
     screen.addnstr(dim[0]-1,0,' '*dim[1],dim[1]-1,debug_color)
     screen.addnstr(dim[0]-1,0,str,dim[1]-1,debug_color)
     screen.refresh()
 
 def info(str):
+    dim=screen.getmaxyx()
     screen.addnstr(dim[0]-2,0,' '*dim[1],dim[1]-1,info_color)
     screen.addnstr(dim[0]-2,0,str,dim[1]-1,info_color)
     screen.refresh()
