@@ -1,4 +1,5 @@
-#!/usr/bin/python3.1
+#!/usr/bin/python
+# vim: set fileencoding=UTF-8 :
 # To change this template, choose Tools | Templates
 # and open the template in the editor.
 
@@ -64,7 +65,7 @@ def cursa(stdscr):
             if c==ord('q') or c==curses.KEY_RESIZE:
                 break
             else:
-                info("La opción para "+chr(c).__str__()+" no está implementada")
+                info("La opcion para "+chr(c).__str__()+" no está implementada")
                 debug(opciones.items().__str__())
         stdscr.erase()
         if c==ord('q'):
