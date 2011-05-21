@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# vim: set fileencoding=UTF-8 :
+# vim: set fileencoding=UTF-8 
 # To change this template, choose Tools | Templates
 # and open the template in the editor.
 
@@ -13,7 +13,7 @@ import curses.wrapper
 #hotkey_attr = curses.A_BOLD | curses.A_UNDERLINE
 #menu_attr = curses.A_NORMAL
 
-
+#variables de grupos y directorios actuales
 grupos=['svn','svn-actividades','svn-actividades-sensor','svn-actividades-sensor-ksensor','svn-prueba','svn-prueba-ejemplo1']
 dirs=['/svn','/svn/actividades','/svn/actividades/sensor','/svn/actividades/sensor/ksensor','/svn/prueba','/svn/prueba/ejemplo1']
 
@@ -24,47 +24,48 @@ dirs=['/svn','/svn/actividades','/svn/actividades/sensor','/svn/actividades/sens
         # @type infobar window
 
 def cursa(stdscr):
+    #Las llamadas a cada menu
     umenu=("User",user_menu)
     gmenu=("Group","group_menu")
     rmenu=("Repository","repo_menu")
+    #Las junto todas en uno
     menus=(umenu,gmenu,rmenu)
     global screen
     while 1:
         # @type stdscr window
         # @type screen window
         # @type grupos list
-        dim=stdscr.getmaxyx()
-        screen = stdscr.subwin(dim[0], dim[1], 0, 0)
-        iniciacolores()
-        screen.refresh()
-        index=-1
+        dim=stdscr.getmaxyx() #mido cuanto mide la terminal actual
+        screen = stdscr.subwin(dim[0], dim[1], 0, 0)#creo una ventana con esas dimensiones
+        iniciacolores()#Habilito los colores, e inicializo los mios
+        curses.curs_set(0)
+        screen.refresh()#Hago efectivos los cambios
+        index=0#-1 si no hay ningun menu
         while 1:
-            opciones=bartool(menus,screen,index)
+            opciones=bartool(menus,screen,index)#paso el menu seleccionado al creador de la barra de arriba
             #main(arbol,index,up)
             #info(index)
-            temp=0
-            c=screen.getch()
+            c=screen.getch()#capturamos el caracter
             # @type opciones dict
-            if chr(c) in opciones:
-                while c!=temp:
-                    if temp!=0:# We want to know if we have been called by another menu, or by the main window
-                        if c == curses.KEY_LEFT:
-                            if index==0:
-                                index=len(menus)
-                            index=index-1
-                        if c == curses.KEY_RIGHT:
-                            if index== len(menus):
-                                index=-1
-                            index=index+1
-                        c=ord(menus[index][0][0])
-                    temp=c
-                    debug("Ha entrado con la tecla "+chr(temp)+"a la función "+opciones[chr(temp)].__str__()+" index="+str(index))
-                    sleep(3)
-                    c=opciones[chr(temp)]()
+            while chr(c) in opciones:#en el bucle de las opciones admitidas
+                    debug("Ha entrado con la tecla "+chr(c)+" a la función "+opciones[chr(c)].__str__()+" index="+str(index))
+                    c=opciones[chr(c)]()#nos metemos en el menú que toca y almacenamos la tecla que nos saca de el
+                    debug("Ha salido pulsando la tecla "+c.__str__()+": c=q/Q(0)")
+                    if c in (curses.KEY_LEFT, curses.KEY_RIGHT):#Si la tecla recibida es un cambio de menu (flechas)
+                        if c == curses.KEY_LEFT:#Si hemos pulsado la tecla hacia la izquierda
+                            if index==0:# si estamos a la izq del todo
+                                index=len(menus)#pasamos a la derecha del todo +1
+                            index=index-1#nos movemos 1 hacia la izq
+                        if c == curses.KEY_RIGHT:#Si es la derecha
+                            if index== (len(menus)-1):#si estamos a la derecha del todo
+                                index=-1#nos pasamos a la izquierda del todo -1
+                            index=index+1#nos movemos 1 hacia la derecha
+                        c=ord(menus[index][0][0])#Emulamos una pulsacion hacia el menu que apunta la flecha
 
-            if c==ord('q') or c==curses.KEY_RESIZE:
-                break
-            else:
+
+            if c in (ord('q'), ord('Q'), 0,curses.KEY_RESIZE):
+                break#salimos del bucle si cambia la ventana o si se presiona la q
+            else:#si no, decimos que la opción no esta implementada
                 info("La opcion para "+chr(c).__str__()+" no está implementada")
                 debug(opciones.items().__str__())
         stdscr.erase()
@@ -122,24 +123,40 @@ def user_menu():
     # @type screen window
     info("La opción para u está implementada con la funcion user_menu")
 
+    #Creamos los menus
     createumenu=("Create user","create_user()")
     addumenu=("Add user","add_user()")
     unaddumenu=("Unadd user","unadd_user()")
     deleteumenu=("Delete user","delete_user()")
 
+    #juntamos los menus
     usermenu=(createumenu,addumenu,unaddumenu,deleteumenu)
+
+    #miramos cual es la palabra mas larga en el menú
     x=0
     for a in usermenu:
         if len(a[0])>x:
             x=len(a[0])
+
+    #creamos una ventana nueva
     umenu=curses.newwin(len(usermenu)+2, x+2, 1, 0)
+
+    #activamos el reconocimiento de flechas
     umenu.keypad(1)
+    
     index=0
     while 1:
+        #creamos el borde de la ventana
         box(umenu,menu_color)
+
+        #averiguamos cuales son las teclas que tenemos que reconocer
         dict=menutool(usermenu,umenu,1,1,index)
         c=umenu.getch()
-        if c in (ord('q'),curses.KEY_RESIZE, curses.KEY_LEFT, curses.KEY_RIGHT):
+        debug("Dentro de User se ha pulsado "+c.__str__())
+	if c in (ord('q'),ord('Q')):#Si ha presionado la q o la Q
+            umenu.erase()
+            return 0
+        if c in (curses.KEY_RESIZE, curses.KEY_LEFT, curses.KEY_RIGHT):#Si ha presionado una flechita o ha redimensionado la pantalla
             return c
         elif c == curses.KEY_DOWN:
             # @type dict dict
@@ -190,12 +207,18 @@ def iniciacolores():
 
 def box(window,attr):
     # ┌┐└┘─│
-    ul='┌'
-    ur='┐'
-    dl='└'
-    dr='┘'
-    h='─'
-    v='│'
+    #ul='┌'
+    #ur='┐'
+    #dl='└'
+    #dr='┘'
+    #h='─'
+    #v='│'
+    ul='#'
+    ur='#'
+    dl='#'
+    dr='#'
+    h='#'
+    v='#'
     # @type window window
     b=0
     dim=window.getmaxyx()
