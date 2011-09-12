@@ -5,8 +5,9 @@ from grp import getgrall
 """
 In this file, I am going to store all the functions refering to the interaction
  to the system
-
 """
+
+class grupos:
 def parse_grupos():
     """Parses groups and filters the ones that have gid>9999 (this svn-admin is
        supposed to work from 10000 and ahead """
@@ -95,4 +96,4 @@ def delgroup(group):
     """Deletes the group"""
     os.system("delgroup "+group)
 
-    
+
