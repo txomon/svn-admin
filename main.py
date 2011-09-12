@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3.1
 
 # To change this template, choose Tools | Templates
 # and open the template in the editor.
@@ -6,38 +6,34 @@
 __author__="javier"
 __date__ ="$09-mar-2011 15:17:25$"
 
-from dirgroup import *
+from functions import *
 from time import sleep
-from graphic import *
 
 fuera=0
+basedir='/svn'
 
 listaporgrupo=parse_grupos()
 if listaporgrupo == -1:
     exit(-1)
-listapordirectorio=parse_dirs(['/svn'],'/svn')
+listapordirectorio=parse_dirs([basedir],basedir)
 # @type listapordirectorio list
 listapordirectorio.sort()
 listaporgrupo=dirtogroup(listapordirectorio)
 listaporgrupo=grouptodir(listaporgrupo,listapordirectorio)
-for a in listaporgrupo:
-	print(a.gr_name)
-for a in listapordirectorio:
-	print(a)
-sleep(2)
+
+x=len(listapordirectorio)
+a=0
 try:
-    stdscr=inicia_curses()
-    while fuera==0:
-        c=stdscr.getch()
-        if c == curses.KEY_RESIZE:
-            stdscr.refresh()
-        if c == ord('q') | c== ord('Q') | c == curses.KEY_EXIT | c=='q' | c=='Q':
-            fuera=1
-except :
-    finaliza_curses(stdscr)
+    while a<x:
+        print(listapordirectorio[a] + ' <==> ' + listaporgrupo[a].gr_name)
+        a=a+1
+except:
+    print('There is no one-to-one relationship between groups and '+
+    'directories so please fix it')
+
+
 sleep(2)
-finaliza_curses(stdscr)
 
-
+quit
 
 
