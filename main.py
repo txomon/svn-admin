@@ -10,26 +10,8 @@ from functions import *
 from time import sleep
 
 fuera=0
-basedir='/svn'
 
-listaporgrupo=parse_grupos()
-if listaporgrupo == -1:
-    exit(-1)
-listapordirectorio=parse_dirs([basedir],basedir)
-# @type listapordirectorio list
-listapordirectorio.sort()
-listaporgrupo=dirtogroup(listapordirectorio)
-listaporgrupo=grouptodir(listaporgrupo,listapordirectorio)
-
-x=len(listapordirectorio)
-a=0
-try:
-    while a<x:
-        print(listapordirectorio[a] + ' <==> ' + listaporgrupo[a].gr_name)
-        a=a+1
-except:
-    print('There is no one-to-one relationship between groups and '+
-    'directories so please fix it')
+svn_state()
 
 
 sleep(2)
