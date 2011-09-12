@@ -8,13 +8,13 @@ In this file, I am going to store all the functions refering to the interaction
 """
 
 class svn_state:
-	basedir='svn'
+    basedir='svn'
     def __init__(self):
         self.parse_dirs()
-		self.parse_groups()
-		self.dirtogroup()
-		self.grouptodir()
-		
+        self.parse_groups()
+        self.dirtogroup()
+        self.grouptodir()
+        
     def parse_groups():
         """Parses groups and filters the ones that have gid>9999 (this svn-admin is
            supposed to work from 10000 and ahead """
@@ -33,24 +33,24 @@ class svn_state:
 
     def parse_dirs():
         return self.__get_parser_dirs(self.basedir,[self.basedir])
-	
-	def __get_parser_dirs(basedir,lista):
-		"""Parses the basepath recurrently and checks if there is any README.txt in
-		the directory as a simple way of checkin if it is a svn repo. It also 
-		filters the lost+found dir, as if it is a self partition, it will
-		probably have one"""
-			
-		a=os.walk(basedir)
-		# @type list list
-		for (path, dirs, files) in a:
-			if (not 'README.txt' in files):
-				for dir in dirs:
-					b=basedir+'/'+dir
-					if (not 'lost+found' in dir):
-						lista.append(b);
-						lista=self.__get_parser_dirs(b,lista)
-				break
-		return lista
+    
+    def __get_parser_dirs(basedir,lista):
+        """Parses the basepath recurrently and checks if there is any README.txt in
+        the directory as a simple way of checkin if it is a svn repo. It also 
+        filters the lost+found dir, as if it is a self partition, it will
+        probably have one"""
+            
+        a=os.walk(basedir)
+        # @type list list
+        for (path, dirs, files) in a:
+            if (not 'README.txt' in files):
+                for dir in dirs:
+                    b=basedir+'/'+dir
+                    if (not 'lost+found' in dir):
+                        lista.append(b);
+                        lista=self.__get_parser_dirs(b,lista)
+                break
+        return lista
 
     def grouptodir():
         """Checks if the groups are one-to-one with the directories, and if not, it
@@ -104,7 +104,7 @@ class svn_state:
         #os.system("addgroup --gid "+gid+" "+group)
 
     def __delgroup(group):
-    """Deletes the group"""
-    os.system("delgroup "+group)
+        """Deletes the group"""
+        os.system("delgroup "+group)
 
 
