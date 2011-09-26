@@ -5,6 +5,7 @@ from grp import getgrall
 """
 In this file, I am going to store all the functions refering to the interaction
  to the system
+
 """
 class svn_state():
     basedir='/svn'
@@ -17,7 +18,8 @@ class svn_state():
         self.printdebug('self.bygroups after dirtogroup() '+self.bygroups.__str__())
         self.grouptodir()
         self.printdebug('self.bydirs after grouptodir() '+self.bydirs.__str__())
-        
+        self.checkperms()       
+
     def printdebug(self,string):
         try:
             if os.environ['DEBUG']:
@@ -38,7 +40,6 @@ class svn_state():
                 lista.append(item.gr_name)
         if len(lista) == 0:
             print("No svn structure in groups file")
-            return(-1)
         self.bygroups=lista
 
     def parse_dirs(self):
@@ -98,6 +99,8 @@ class svn_state():
             if ('svn' in item.gr_name) and (item.gr_gid > 9999):
                 lista.append(item.gr_gid)
         lista.sort()
+        if len(lista) == 0:
+            lista.append(9999)
         gid=lista.pop()+1
         self.printdebug('I am going to try to add '+ group + ' to the groups file')
         os.system("addgroup --gid "+gid.__str__()+" "+group)
@@ -108,4 +111,7 @@ class svn_state():
         os.system("delgroup "+group)
         self.parse_groups()
 
-
+    def checkperms(self):
+        for a in range(len(self.bydirs)):
+            os.system("chgrp -R "+self.bygroups[a]+" "+self.bydirs[a])
+            os.system("chmod g+ws "+self.bydirs[a])
